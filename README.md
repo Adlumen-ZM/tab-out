@@ -32,7 +32,8 @@ The agent will walk you through it. Takes about 1 minute.
 - **Expandable groups** show the first 8 tabs with a clickable "+N more"
 - **Appearance** — Light, Dark, or **System** theme (stored locally)
 - **Color palettes** — Paper (default), Clay, Slate, Forest, and Noir, each tuned for light and dark mode
-- **Integrated search** — search bar with Google / Bing / Baidu, debounced **query suggestions**, and navigation in the current tab
+- **Integrated search** — search bar with Google / Bing / Baidu, debounced **query suggestions**, and results **opened in a new tab** (your Tab Out dashboard stays put)
+- **Startup dashboard** — after each browser launch, the background script **deduplicates** extra Tab Out tabs in the **same window** (e.g. session restore plus Chrome opening another new-tab page), keeping one tab per window (pinned first, then leftmost). It then **auto-pins** a single Tab Out if none is pinned yet; if a **pinned** Tab Out is **already restored**, auto-pin is skipped. Work is done in **sub-second retries** with short internal time caps so nothing feels like a deliberate delay
 - **Tab Out tab hygiene** — banner when multiple Tab Out new-tab pages are open, with one-click cleanup
 - **Optional local config** — drop `config.local.js` beside `app.js` if you need overrides (loaded only if present)
 - **100% local dashboard** — open tabs and saved-for-later data stay in `chrome.storage.local`
@@ -73,7 +74,7 @@ You open a new tab
   -> Save tabs for later before closing them
 ```
 
-Everything runs inside the Chrome extension. Saved tabs and preferences are stored in `chrome.storage.local`. Search requests go only to the search / suggestion hosts you select (Google, Bing, or Baidu).
+Everything runs inside the Chrome extension. Saved tabs and preferences are stored in `chrome.storage.local`. Search requests go only to the search / suggestion hosts you select (Google, Bing, or Baidu). Results load in a **new** tab; Tab Out itself is not navigated away.
 
 ---
 
@@ -86,6 +87,7 @@ Everything runs inside the Chrome extension. Saved tabs and preferences are stor
 | Sound | Web Audio API (synthesized, no files) |
 | Animations | CSS transitions + JS confetti particles |
 | Theming | CSS custom properties + `color-mix` per palette |
+| Startup state | `chrome.storage.session` (cleared when the browser exits) for one-shot pin / dedupe windows |
 
 ---
 
@@ -99,4 +101,4 @@ MIT
 
 Tab Out was originally created by **[Zara](https://x.com/zarazhangrui)**. Upstream project: **[zarazhangrui/tab-out](https://github.com/zarazhangrui/tab-out)**.
 
-This repository ([**Adlumen-ZM/tab-out**](https://github.com/Adlumen-ZM/tab-out)) extends that base with the appearance, palette, search, and polish described above.
+This repository ([**Adlumen-ZM/tab-out**](https://github.com/Adlumen-ZM/tab-out)) extends that base with the appearance, palette, integrated search (new tab), startup tab merge + pin behavior, and other polish described above. The shipped extension **version** is the `version` field in `extension/manifest.json`.

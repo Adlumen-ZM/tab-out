@@ -1574,7 +1574,7 @@ async function initTheme() {
 
 
 /* ----------------------------------------------------------------
-   SEARCH — engines + suggest + navigate current tab
+   SEARCH — engines + suggest + open results in a new tab
    ---------------------------------------------------------------- */
 
 const SEARCH_ENGINES = {
@@ -1637,13 +1637,11 @@ async function fetchSuggestionsForEngine(engineId, query, signal) {
   return [];
 }
 
-async function navigateCurrentTabToUrl(url) {
+async function openSearchUrlInNewTab(url) {
   try {
-    const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-    const tab = tabs[0];
-    if (tab?.id) await chrome.tabs.update(tab.id, { url });
+    await chrome.tabs.create({ url, active: true });
   } catch (err) {
-    console.warn('[tab-out] navigate tab failed:', err);
+    console.warn('[tab-out] open search tab failed:', err);
   }
 }
 
@@ -1653,7 +1651,7 @@ async function submitSearchQuery(raw) {
   const sel = document.getElementById('searchEngine');
   const engineId = sel ? sel.value : 'google';
   const engine = SEARCH_ENGINES[engineId] || SEARCH_ENGINES.google;
-  await navigateCurrentTabToUrl(engine.searchUrl(q));
+  await openSearchUrlInNewTab(engine.searchUrl(q));
 }
 
 function initSearchBar() {
